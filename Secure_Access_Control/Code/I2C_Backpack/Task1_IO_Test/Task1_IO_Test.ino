@@ -1,11 +1,14 @@
-// ET4047 Week 10 - Secure Access Control
+// ET4047 Week 10 - Secure Access Control (I2C backpack LCD version)
 // Task 1: Hardware test
 // Shows the state of every button and switch on the LCD.
 // Button 1 lights the green LED, Button 2 lights the red LED.
 
-#include "lab_lcd.h"
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>   // "LiquidCrystal I2C" by Frank de Brabander
 
-LabLCD lcd(16, 2);
+// 16x2 LCD with an I2C backpack. The lab displays are at address 0x20.
+// Blank screen? Try 0x27 or 0x3F, and turn the contrast screw.
+LiquidCrystal_I2C lcd(0x20, 16, 2);
 
 const byte BUTTON_PINS[3] = {2, 3, 4};   // B1, B2, B3
 const byte SWITCH_PINS[3] = {5, 6, 7};   // SW1, SW2, SW3 (Extension only)
@@ -29,8 +32,6 @@ void setup() {
 
   lcd.init();
   lcd.backlight();
-  Serial.print("LCD: ");
-  Serial.println(lcd.name());
 }
 
 void loop() {

@@ -1,4 +1,4 @@
-// ET4047 Week 10 - Secure Access Control
+// ET4047 Week 10 - Secure Access Control (I2C backpack LCD version)
 // Task 5: Security improvements to the Task 4 lock
 //   [1] Code is masked with '*' (no shoulder surfing)
 //   [2] Denied screen gives no hints (no "tries left")
@@ -6,13 +6,17 @@
 //   [4] Failed attempts are kept in EEPROM, so RESET / power off
 //       does not clear a lockout
 //   [5] Every digit is always checked (no early exit)
-// Needs the lab_lcd.h and buttons.h tabs.
+// Needs the buttons.h tab.
 
 #include <EEPROM.h>
-#include "lab_lcd.h"
-#include "buttons.h"
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>   // "LiquidCrystal I2C" by Frank de Brabander
 
-LabLCD lcd(16, 2);
+// 16x2 LCD with an I2C backpack. The lab displays are at address 0x20.
+// Blank screen? Try 0x27 or 0x3F, and turn the contrast screw.
+LiquidCrystal_I2C lcd(0x20, 16, 2);
+
+#include "buttons.h"
 
 const byte LED_GREEN = 8;
 const byte LED_RED   = 9;
@@ -26,8 +30,6 @@ const unsigned long DENIED_MS       = 2000;
 const unsigned long ENTRY_MS        = 10000;
 const unsigned long BASE_LOCKOUT_MS = 10000;
 const byte MAX_LOCKOUT_LEVEL        = 4;      // 10 s * 2^4 = 160 s
-
-const byte RED = 0x1, GREEN = 0x2, WHITE = 0x7;
 
 // [4] EEPROM addresses
 const int EE_MAGIC    = 0;    // 0xA5 once the EEPROM has been set up
@@ -88,7 +90,6 @@ void enterState(State s) {
   lcd.clear();
   digitalWrite(LED_GREEN, LOW);
   digitalWrite(LED_RED, LOW);
-  lcd.setBacklight(WHITE);
 
   switch (s) {
     case IDLE:
@@ -102,17 +103,14 @@ void enterState(State s) {
       break;
     case ACCESS_GRANTED:
       digitalWrite(LED_GREEN, HIGH);
-      lcd.setBacklight(GREEN);
       lcd.print("ACCESS GRANTED");
       break;
     case ACCESS_DENIED:
       digitalWrite(LED_RED, HIGH);
-      lcd.setBacklight(RED);
       lcd.print("ACCESS DENIED");                // [2] nothing else
       break;
     case LOCKOUT:
       digitalWrite(LED_RED, HIGH);
-      lcd.setBacklight(RED);
       lcd.print("SYSTEM LOCKED");
       lockoutMs = BASE_LOCKOUT_MS << lockoutLevel;   // [3] 10,20,40,80,160 s
       lastSecondsShown = -1;

@@ -1,11 +1,13 @@
-// ET4047 Week 10 - Secure Access Control
+// ET4047 Week 10 - Secure Access Control (Adafruit RGB LCD shield version)
 // Task 2: Debounced buttons and code entry
 // Each press is counted once. The LCD shows the code typed so far
 // and compares raw edges (with bounce) against clean presses.
 
-#include "lab_lcd.h"
+#include <Wire.h>
+#include <Adafruit_RGBLCDShield.h>   // "Adafruit RGB LCD Shield Library"
 
-LabLCD lcd(16, 2);
+// Adafruit RGB LCD shield (I2C, address 0x20)
+Adafruit_RGBLCDShield lcd;
 
 const byte BUTTON_PINS[3] = {2, 3, 4};
 const unsigned long DEBOUNCE_MS = 40;    // try 0 and compare the counts
@@ -86,8 +88,8 @@ void setup() {
     buttons[i].lastReading = HIGH;
     buttons[i].lastChange = 0;
   }
-  lcd.init();
-  lcd.backlight();
+  lcd.begin(16, 2);
+  lcd.setBacklight(0x7);   // white backlight
   showScreen();
 }
 

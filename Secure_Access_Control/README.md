@@ -32,8 +32,16 @@ attack the lock, and fix what you find.
 | 16×2 LCD with I2C backpack, **or** Adafruit RGB LCD shield | 1 |
 | Slide switches or jumper wires (Extension only) | 3 |
 
-Libraries (Arduino Library Manager): **LiquidCrystal I2C** (Frank de Brabander)
-and **Adafruit RGB LCD Shield Library**. `lab_lcd.h` detects which LCD is fitted.
+### Pick the code for your LCD
+
+| Your LCD | Code folder | Library (Tools → Manage Libraries…) |
+|----------|-------------|--------------------------------------|
+| 16×2 LCD with I2C backpack | [`Code/I2C_Backpack/`](Code/I2C_Backpack) | **LiquidCrystal I2C** (Frank de Brabander) |
+| Adafruit RGB LCD shield | [`Code/Adafruit_RGB_Shield/`](Code/Adafruit_RGB_Shield) | **Adafruit RGB LCD Shield Library** |
+
+The two versions are identical apart from the LCD lines. On the shield the
+backlight also turns green (granted) or red (denied). The backpack code uses
+address `0x20`; if the screen stays blank, try `0x27`.
 
 ### Wiring
 
@@ -51,17 +59,18 @@ Buttons and switches go pin → part → GND. LEDs go pin → 220 Ω → LED →
 
 ## Tasks
 
-| # | Task | Time | Sketch |
+| # | Task | Time | Folder |
 |---|------|------|--------|
-| 1 | Hardware test | 15 min | [`Task1_IO_Test`](Code/Task1_IO_Test/Task1_IO_Test.ino) |
-| 2 | Debouncing and code entry | 20 min | [`Task2_Debounce`](Code/Task2_Debounce/Task2_Debounce.ino) |
-| 3 | The finite state machine | 20 min | [`Task3_FSM`](Code/Task3_FSM/Task3_FSM.ino) |
-| 4 | Attempt counter and lockout | 20 min | [`Task4_Lockout`](Code/Task4_Lockout/Task4_Lockout.ino) |
-| 5 | Cybersecurity challenge | 20 min | [`Task5_Secure`](Code/Task5_Secure/Task5_Secure.ino) |
-| Ext | Operating modes with switches | optional | [`Extension_Switches`](Code/Extension_Switches/Extension_Switches.ino) |
+| 1 | Hardware test | 15 min | `Task1_IO_Test` |
+| 2 | Debouncing and code entry | 20 min | `Task2_Debounce` |
+| 3 | The finite state machine | 20 min | `Task3_FSM` |
+| 4 | Attempt counter and lockout | 20 min | `Task4_Lockout` |
+| 5 | Cybersecurity challenge | 20 min | `Task5_Secure` |
+| Ext | Operating modes with switches | optional | `Extension_Switches` |
 
-Each folder opens directly in the Arduino IDE and already contains the tabs it
-needs (`lab_lcd.h`, and `buttons.h` from Task 3 on).
+Every task folder is inside both `Code/I2C_Backpack/` and `Code/Adafruit_RGB_Shield/`.
+Open the `.ino` in the Arduino IDE; from Task 3 on, `buttons.h` is in the same
+folder and opens as a second tab.
 
 ![LCD screens](images/lcd_states.png)
 
@@ -92,5 +101,6 @@ needs (`lab_lcd.h`, and `buttons.h` from Task 3 on).
 |------|-------------|
 | `W10_LAB_Secure_Access_Control.pdf` | The lab document |
 | `W10 LAB Secure Access Control.docx` | Editable Word version |
-| `Code/` | One folder per task, ready to open in the Arduino IDE |
+| `Code/I2C_Backpack/` | One folder per task, for the I2C backpack LCD |
+| `Code/Adafruit_RGB_Shield/` | One folder per task, for the Adafruit RGB LCD shield |
 | `images/` | Figures used in the lab document |

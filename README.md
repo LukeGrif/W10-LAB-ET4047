@@ -25,5 +25,5 @@ timed with `millis()`, then attack your own lock and make it stronger.
 |------|-------------|
 | `index.html` | GitHub Pages landing page |
 | `viewer.html` | Renders the lab PDF (`viewer.html?lab=secure`) |
-| `Secure_Access_Control/` | Lab document (PDF and Word), figures and the code for every task |
+| `Secure_Access_Control/` | Lab document (PDF and Word), figures, and the code for every task in two versions: `Code/I2C_Backpack/` and `Code/Adafruit_RGB_Shield/` |
 | `assets/` | University logos used on the landing page |

@@ -1,12 +1,15 @@
-// ET4047 Week 10 - Secure Access Control
+// ET4047 Week 10 - Secure Access Control (Adafruit RGB LCD shield version)
 // Task 3: Finite State Machine
 // IDLE -> ENTER_CODE -> ACCESS_GRANTED / ACCESS_DENIED -> IDLE
-// Needs the lab_lcd.h and buttons.h tabs.
+// Needs the buttons.h tab.
 
-#include "lab_lcd.h"
+#include <Wire.h>
+#include <Adafruit_RGBLCDShield.h>   // "Adafruit RGB LCD Shield Library"
+
+// Adafruit RGB LCD shield (I2C, address 0x20)
+Adafruit_RGBLCDShield lcd;
+
 #include "buttons.h"
-
-LabLCD lcd(16, 2);
 
 const byte LED_GREEN = 8;
 const byte LED_RED   = 9;
@@ -17,8 +20,8 @@ const byte PASSWORD[CODE_LENGTH] = {1, 3, 2};
 const unsigned long GRANTED_MS = 3000;
 const unsigned long DENIED_MS  = 2000;
 
-// RGB shield backlight colours (any colour = "on" for the backpack LCD)
-const byte RED = 0x1, GREEN = 0x2, WHITE = 0x7;
+// Backlight colours
+const byte BL_RED = 0x1, BL_GREEN = 0x2, BL_WHITE = 0x7;
 
 // ---------- FSM ----------
 enum State { IDLE, ENTER_CODE, ACCESS_GRANTED, ACCESS_DENIED };
@@ -52,7 +55,7 @@ void enterState(State s) {
   lcd.clear();
   digitalWrite(LED_GREEN, LOW);
   digitalWrite(LED_RED, LOW);
-  lcd.setBacklight(WHITE);
+  lcd.setBacklight(BL_WHITE);
 
   switch (s) {
     case IDLE:
@@ -68,13 +71,13 @@ void enterState(State s) {
       break;
     case ACCESS_GRANTED:
       digitalWrite(LED_GREEN, HIGH);
-      lcd.setBacklight(GREEN);
+      lcd.setBacklight(BL_GREEN);
       lcd.print("ACCESS GRANTED");
       Serial.println("ACCESS_GRANTED");
       break;
     case ACCESS_DENIED:
       digitalWrite(LED_RED, HIGH);
-      lcd.setBacklight(RED);
+      lcd.setBacklight(BL_RED);
       lcd.print("ACCESS DENIED");
       Serial.println("ACCESS_DENIED");
       break;
@@ -86,8 +89,8 @@ void setup() {
   initButtons();
   pinMode(LED_GREEN, OUTPUT);
   pinMode(LED_RED, OUTPUT);
-  lcd.init();
-  lcd.backlight();
+  lcd.begin(16, 2);
+  lcd.setBacklight(BL_WHITE);
   enterState(IDLE);
 }
 
